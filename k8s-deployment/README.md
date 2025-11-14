@@ -57,6 +57,25 @@ kubectl apply -f postgresql-secret.yaml
 ```bash
 kubectl apply -f postgre-configmap.yaml
 ```
+---
+
+# 🗄 StorageClass (Dynamic Provisioning for PostgreSQL)
+
+PostgreSQL runs as a **StatefulSet**, and each replica needs its own PersistentVolumeClaim (PVC).  
+Your PVC was stuck in `Pending` because Kubernetes requires a StorageClass to dynamically create a PersistentVolume.
+
+To fix this, we used a pre-built StorageClass from a public GitHub repository.
+
+### 📌 StorageClass Used
+**Link:**  
+https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/blob/master/deploy/class.yaml  
+
+This StorageClass provides an automatic NFS-backed PersistentVolume for PVCs created by PostgreSQL.
+
+### ✔ Apply StorageClass
+```bash
+kubectl apply -f storageclass.yaml
+```
 
 ## 4. PostgreSQL StatefulSet + Headless Service
 ```bash
