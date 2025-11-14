@@ -15,47 +15,34 @@ spec:
       labels:
         app: worker
     spec:
-containers:
-  - name: worker
-    image: devivaraprasadjami/worker:latest
-    imagePullPolicy: IfNotPresent
-    env:
-      - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
-        valueFrom:
-          configMapKeyRef:
-            name: voting-config
-            key: KAFKA_BOOTSTRAP_SERVERS
-      - name: SPRING_DATASOURCE_URL
-        value: "jdbc:postgresql://postgres:5432/voting_db"
-      - name: SPRING_DATASOURCE_USERNAME
-        valueFrom:
-          secretKeyRef:
-            name: postgres-secret
-            key: POSTGRES_USER
-      - name: SPRING_DATASOURCE_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: postgres-secret
-            key: POSTGRES_PASSWORD
+      containers:
+        - name: worker
+          image: devivaraprasadjami/worker:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: voting-config
+                  key: KAFKA_BOOTSTRAP_SERVERS
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres:5432/voting_db"
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
 
-    livenessProbe:
-      httpGet:
-        path: /actuator/health
-        port: 8080
-      initialDelaySeconds: 10
-      periodSeconds: 20
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
 
-    readinessProbe:
-      httpGet:
-        path: /actuator/health
-        port: 8080
-      initialDelaySeconds: 5
-      periodSeconds: 10
-
-    resources:
-      requests:
-        cpu: "200m"
-        memory: "512Mi"
-      limits:
-        cpu: "500m"
-        memory: "1Gi"
