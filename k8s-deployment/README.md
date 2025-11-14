@@ -156,4 +156,11 @@ SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/voting_db
 POSTGRES_HOST=postgres
 POSTGRES_DB=voting_db
 ```
+| Component    | Type                   | Purpose                               |
+|--------------|------------------------|----------------------------------------|
+| **vote**     | Deployment + NodePort  | UI for voting → sends events to Kafka |
+| **worker**   | Deployment             | Consumes Kafka → saves to PostgreSQL  |
+| **result**   | Deployment + NodePort  | Shows real-time results               |
+| **kafka**    | Deployment + ClusterIP | Message broker                        |
+| **postgres** | StatefulSet + PVC      | Persistent DB                         |
 
