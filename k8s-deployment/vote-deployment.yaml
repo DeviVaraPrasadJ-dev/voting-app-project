@@ -15,33 +15,34 @@ spec:
       labels:
         app: vote
     spec:
-containers:
-  - name: vote
-    image: devivaraprasadjami/vote:latest    #replace with your actual image
-    imagePullPolicy: IfNotPresent
-    ports:
-      - containerPort: 80
-    env:
-      - name: KAFKA_BROKERS
-        valueFrom:
-          configMapKeyRef:
-            name: voting-config
-            key: KAFKA_BOOTSTRAP_SERVERS
-      - name: KAFKA_TOPIC
-        valueFrom:
-          configMapKeyRef:
-            name: voting-config
-            key: KAFKA_TOPIC
-    readinessProbe:
-      httpGet:
-        path: /healthz
-        port: 80
-      initialDelaySeconds: 5
-      periodSeconds: 10
-    resources:
-      requests:
-        cpu: "100m"
-        memory: "128Mi"
-      limits:
-        cpu: "250m"
-        memory: "256Mi"
+      containers:
+        - name: vote
+          image: devivaraprasadjami/vote:latest    #replace with your actual image
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          env:
+            - name: KAFKA_BROKERS
+              valueFrom:
+                configMapKeyRef:
+                  name: voting-config
+                  key: KAFKA_BOOTSTRAP_SERVERS
+            - name: KAFKA_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: voting-config
+                  key: KAFKA_TOPIC
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+
