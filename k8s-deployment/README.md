@@ -66,11 +66,25 @@ Your PVC was stuck in `Pending` because Kubernetes requires a StorageClass to dy
 
 To fix this, we used a pre-built StorageClass from a public GitHub repository.
 
-### 📌 StorageClass Used
-**Link:**  
-https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/blob/master/deploy/class.yaml  
+### ⭐ StorageClass Used (Local Path Provisioner)
 
-This StorageClass provides an automatic NFS-backed PersistentVolume for PVCs created by PostgreSQL.
+To enable persistent storage for PostgreSQL, we installed the Local Path Provisioner from Rancher and set it as the default StorageClass.
+
+#### Install StorageClass
+```bash
+kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
+```
+
+#### Set it as the Default StorageClass
+```bash
+kubectl patch storageclass local-path \
+  -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
+
+#### Verify
+```bash
+kubectl get storageclass
+```
 
 ### ✔ Apply StorageClass
 ```bash
